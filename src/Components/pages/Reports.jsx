@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useClinic } from '../../context/ClinicContext';
+import { useClinic } from '../../ClinicContextFolder/ContextFile';
 import { Printer } from 'lucide-react';
 
 const Reports = () => {

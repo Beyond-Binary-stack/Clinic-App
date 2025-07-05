@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useClinic } from '../../Context/ClinicContext';
+import { useClinic } from '../../ClinicContextFolder/ContextFile';
 
 const Medicines = () => {
   const { medicines, setMedicines } = useClinic();

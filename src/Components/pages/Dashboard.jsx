@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, Folder, FileText, Calendar } from 'lucide-react';
-import { useClinic } from '../../Context/ClinicContext';
+import { useClinic } from '../../ClinicContextFolder/ContextFile';
 
 const Dashboard = () => {
   const { patients, medicines, reports } = useClinic();

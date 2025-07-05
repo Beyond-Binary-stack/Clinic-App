@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useClinic } from '../../Context/ClinicContext';
+import { useClinic } from '../../ClinicContextFolder/ContextFile';
 import { FaSearch, FaPlus, FaEdit } from 'react-icons/fa';
 
 const Patients = () => {
