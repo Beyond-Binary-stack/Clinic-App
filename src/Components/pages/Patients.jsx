@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useClinic } from '../../ClinicContextFolder/ContextFile';
 import { FaSearch, FaPlus, FaEdit } from 'react-icons/fa';
 
 const Patients = () => {
-  const { patients, setPatients } = useClinic();
+  const navigate = useNavigate();
+
+  // Sample default patients
+  const [patients, setPatients] = useState([
+    { name: 'Tomas Shelby', age: '30', phone: '1234567890', note: 'Allergic to penicillin' },
+    { name: 'Anas Ahmed', age: '25', phone: '0987654321', note: 'Diabetic' }
+  ]);
+
   const [form, setForm] = useState({ name: '', age: '', phone: '', note: '' });
   const [searchTerm, setSearchTerm] = useState('');
   const [editingIndex, setEditingIndex] = useState(null);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -57,7 +62,10 @@ const Patients = () => {
         </button>
       </div>
 
-      <form onSubmit={handleAddOrUpdatePatient} className="bg-white p-6 rounded-lg shadow-md mb-6 space-y-4">
+      <form
+        onSubmit={handleAddOrUpdatePatient}
+        className="bg-white p-6 rounded-lg shadow-md mb-6 space-y-4"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"

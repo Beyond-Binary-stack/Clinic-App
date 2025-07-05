@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useClinic } from '../../ClinicContextFolder/ContextFile';
 
 const Medicines = () => {
-  const { medicines, setMedicines } = useClinic();
+  const [medicines, setMedicines] = useState([
+    { name: 'Paracetamol', type: 'Tablet', dosage: '500mg' }
+  ]);
 
   const [medicine, setMedicine] = useState({
     name: '',

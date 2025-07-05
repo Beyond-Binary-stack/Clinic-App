@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Users, Folder, FileText, Calendar } from 'lucide-react';
-import { useClinic } from '../../ClinicContextFolder/ContextFile';
 
 const Dashboard = () => {
-  const { patients, medicines, reports } = useClinic();
+  // Dummy local state to simulate context data
+  const [patients] = useState([{ id: 1 }, { id: 2 }]);
+  const [medicines] = useState([{ id: 1 }, { id: 2 }, { id: 3 }]);
+  const [reports] = useState([{ id: 1 }]);
 
   const stats = [
     { label: 'Total Patients', value: patients.length, icon: <Users className="w-6 h-6 text-blue-600" /> },

@@ -1,44 +1,47 @@
 import React, { useState, useRef } from 'react';
-import { useClinic } from '../../ClinicContextFolder/ContextFile';
 import { Printer } from 'lucide-react';
 
 const Reports = () => {
-  const { reports, setReports, medicines } = useClinic();
+  const [reports, setReports] = useState([]);
+  const [medicines] = useState([
+    { name: 'Paracetamol', type: 'Tablet', dosage: '500mg' },
+    { name: 'Ibuprofen', type: 'Capsule', dosage: '200mg' },
+    { name: 'Amoxicillin', type: 'Syrup', dosage: '250mg/5ml' },
+  ]);
 
-  // State for the new report form
   const [report, setReport] = useState({
     doctorName: '',
     patientName: '',
     situation: '',
-    selectedMedicines: [], // Now stores full medicine objects
+    selectedMedicines: [],
   });
 
   const printRef = useRef();
 
-  // Update text inputs
   const handleChange = (e) => {
     setReport({ ...report, [e.target.name]: e.target.value });
   };
 
-  // Update selected medicines (store full objects)
   const handleMedicineChange = (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions);
-    const selectedMedicines = selectedOptions.map((option) => {
-      return medicines.find((med) => med.name === option.value);
-    });
-    setReport({ ...report, selectedMedicines });
+    const selected = selectedOptions
+      .map((option) => medicines.find((med) => med.name === option.value))
+      .filter(Boolean); // Remove undefined
+    setReport({ ...report, selectedMedicines: selected });
   };
 
-  // Submit report
   const handleSubmit = (e) => {
     e.preventDefault();
-    setReports([...reports, report]);
-    setReport({ doctorName: '', patientName: '', situation: '', selectedMedicines: [] });
+    setReports((prev) => [...prev, report]);
+    setReport({
+      doctorName: '',
+      patientName: '',
+      situation: '',
+      selectedMedicines: [],
+    });
   };
 
-  // Print report
   const handlePrint = () => {
-    const printContents = printRef.current.innerHTML;
     const printWindow = window.open('', '', 'width=800,height=600');
     printWindow.document.write(`
       <html>
@@ -53,9 +56,7 @@ const Reports = () => {
             .medicine-item { margin-bottom: 5px; }
           </style>
         </head>
-        <body>
-          ${printContents}
-        </body>
+        <body>${printRef.current.innerHTML}</body>
       </html>
     `);
     printWindow.document.close();
@@ -67,7 +68,7 @@ const Reports = () => {
     <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
       <h2 className="text-2xl font-bold mb-6">Doctor Report</h2>
 
-      {/* Report Form */}
+      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
@@ -94,17 +95,17 @@ const Reports = () => {
           placeholder="Diagnosis / Situation"
           className="w-full p-2 border rounded"
           required
-        ></textarea>
+        />
 
         <label className="block font-semibold">Select Medicines</label>
         <select
           multiple
-          value={report.selectedMedicines.map((med) => med?.name || '')}
+          value={report.selectedMedicines.map((med) => med.name)}
           onChange={handleMedicineChange}
           className="w-full p-2 border rounded h-32"
         >
-          {medicines.map((med, idx) => (
-            <option key={idx} value={med.name}>
+          {medicines.map((med, index) => (
+            <option key={index} value={med.name}>
               {med.name} ({med.type}, {med.dosage})
             </option>
           ))}
@@ -118,17 +119,18 @@ const Reports = () => {
         </button>
       </form>
 
-      {/* Action Buttons */}
-      <div className="flex justify-end mt-4 gap-4">
+      {/* Print Button */}
+      <div className="flex justify-end mt-4">
         <button
           onClick={handlePrint}
           className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
         >
-          <Printer size={16} /> Print Report
+          <Printer size={16} />
+          Print Report
         </button>
       </div>
 
-      {/* Printable Report Section */}
+      {/* Printable Report */}
       <div ref={printRef} className="mt-6 p-6 border border-gray-300 bg-white">
         <div className="title">Clinic Name - Prescription</div>
         <div className="section"><span className="label">Doctor:</span> {report.doctorName}</div>
@@ -141,16 +143,20 @@ const Reports = () => {
         <div className="section">
           <div className="label">Prescribed Medicines:</div>
           <div className="box">
-            {report.selectedMedicines.map((med, index) => (
-              <div key={index} className="medicine-item">
-                <strong>{med.name}</strong> ({med.type}) – {med.dosage}
-              </div>
-            ))}
+            {report.selectedMedicines.length > 0 ? (
+              report.selectedMedicines.map((med, index) => (
+                <div key={index} className="medicine-item">
+                  <strong>{med.name}</strong> ({med.type}) – {med.dosage}
+                </div>
+              ))
+            ) : (
+              <div>No medicines selected.</div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* List of All Saved Reports */}
+      {/* Saved Reports */}
       <div className="mt-10">
         <h3 className="text-xl font-semibold mb-2">Saved Reports</h3>
         <ul className="space-y-3">
@@ -162,10 +168,10 @@ const Reports = () => {
               <div className="text-sm text-gray-600">{r.situation}</div>
               <div className="text-sm mt-1 text-gray-700">
                 <span className="font-semibold">Medicines:</span>
-                <ul className="ml-4 mt-1">
+                <ul className="ml-4 mt-1 list-disc">
                   {r.selectedMedicines.map((med, idx) => (
                     <li key={idx}>
-                      • {med.name} ({med.type}, {med.dosage})
+                      {med.name} ({med.type}, {med.dosage})
                     </li>
                   ))}
                 </ul>
