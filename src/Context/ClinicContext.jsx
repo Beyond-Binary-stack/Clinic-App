@@ -5,21 +5,12 @@ const ClinicContext = createContext();
 
 // Provider component
 export const ClinicProvider = ({ children }) => {
-  const [patients, setPatients] = useState([]); // State for patients
-  const [medicines, setMedicines] = useState([]); // State for medicines
-  const [reports, setReports] = useState([]); // State for reports
+  const [patients, setPatients] = useState([]);
+  const [medicines, setMedicines] = useState([]);
+  const [reports, setReports] = useState([]);
 
   return (
-    <ClinicContext.Provider
-      value={{
-        patients,
-        setPatients,
-        medicines,
-        setMedicines,
-        reports,
-        setReports,
-      }}
-    >
+    <ClinicContext.Provider value={{ patients, setPatients, medicines, setMedicines, reports, setReports }}>
       {children}
     </ClinicContext.Provider>
   );
